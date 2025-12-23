@@ -5,22 +5,27 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 # from langgraph.checkpoint.memory import InMemorySaver
 #**************** change 1
 from langgraph.checkpoint.sqlite import SqliteSaver 
-# ************
 from langgraph.graph.message import add_messages
 from dotenv import load_dotenv
 from langchain_core.messages import HumanMessage
+import os
+from dotenv import load_dotenv
+from langchain_mistralai import ChatMistralAI
+
 load_dotenv()
 
 # llm = ChatGoogleGenerativeAI(
-#     model="gemini-2.5-flash",  # or whichever model
+#     model="gemini-2.5-flash",  
 #     api_key="...."             
 # )
-from langchain_mistralai import ChatMistralAI
+
+# load environment variables
 
 llm = ChatMistralAI(
-    api_key="05M3e310UpAluqszzJMayblJMIvViXqf",
+    api_key=os.getenv("MISTRAL_API_KEY"),
     model="mistral-small-latest"
 )
+
 
 class ChatState(TypedDict):
     messages: Annotated[list[BaseMessage], add_messages]
@@ -53,4 +58,5 @@ def retreive_all_threads():
     all_threads=set() #to get unique thread 
     for checkpoint in checkpointer.list(None):  # None means all threads
         all_threads.add(checkpoint.config["configurable"]["thread_id"])
+
     return list(all_threads)
