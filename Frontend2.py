@@ -46,12 +46,18 @@ if "message_history" not in st.session_state:
     st.session_state["message_history"] = []
 
 # ------------------ LLM FOR TITLE GENERATION ----------------
+import os
+from dotenv import load_dotenv
 from langchain_mistralai import ChatMistralAI
 
+# load environment variables
+load_dotenv()
+
 llm = ChatMistralAI(
-    api_key="05M3e310UpAluqszzJMayblJMIvViXqf",
+    api_key=os.getenv("MISTRAL_API_KEY"),
     model="mistral-small-latest"
 )
+
 
 #PROPER conv. name generator (runs only once)
 def get_conversation_name(thread_id):
@@ -138,4 +144,5 @@ if user_input:
     #After first message → generate permanent title(
     if st.session_state["thread_names"][st.session_state["thread_id"]] == "New Conversation":
         get_conversation_name(st.session_state["thread_id"])
+
 
